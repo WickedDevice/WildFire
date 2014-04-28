@@ -1,47 +1,53 @@
 #include "WildFire.h"
 #include <inttypes.h>
+#include <Serial.h>
 
 WildFire::WildFire(uint8_t board_version){
   this->board_version = board_version;
 }
 
-void WildFire::begin(void){
+void WildFire::begin(){
+
   // These Pins are Hardware-Bound Outputs
-  // Pin 10 and 4 should not be set LOW at the same time
-  // because they control common-output buffers
-  uint8_t pv2[6] = {4,    7,   9,    10,   11,  13}; 
-  uint8_t pv3[10] = {6,    7,   14,  15,    16,   21,   23,   10,   11,   13};
-  uint8_t p[10] = {0}; 
-  uint8_t p_state[10] = {0};
-  uint8_t num_output_pins = 0;
+  // Set them up as such
   
-  memset(p_state, HIGH, 10);
-  
-  switch(board_version){
-  case WILDFIRE_V2:
-    num_output_pins = 6;
-    memcpy(p, pv2, 6);
-    break;
-  case WILDFIRE_V3:
-    num_output_pins = 10;
-    memcpy(p, pv3, 10);  
-    p_state[0] = LOW;     // initialize LED off
-    break;
+  if(board_version == WILDFIRE_V2){
+    uint8_t p[] = {4,7,9,10,11,13}; 
+    for(uint8_t i = 0; i < sizeof(p); i++){
+      pinMode(p[i], OUTPUT);        
+    }
+          
+    // Pin 10 and 4 should not be set LOW at the same time
+    // because they control common-output buffers
+    digitalWrite(10, HIGH);   // Slave Select for WiFi 
+    digitalWrite(4, HIGH);    // Slave Select for SD Card
+          
+    pinMode(8, INPUT);        // WiFi IRQ Signal
+    digitalWrite(8, HIGH);    // Pulled Up
+          
+    pinMode(12, INPUT);       // MISO 
+    digitalWrite(12, HIGH);   // Pulled Up
   }
-  
-  for(uint8_t i = 0; i < num_output_pins; i++){
-    digitalWrite(p[i], p_state[i]);
-    pinMode(p[i], OUTPUT);        
-  }       
-  
-  switch(board_version){
-  case WILDFIRE_V2:
-    pinMode(8, INPUT_PULLUP);  // WiFi IRQ Signal    
-    break;
-  case WILDFIRE_V3:
-    pinMode(22, INPUT_PULLUP);  // WiFi IRQ Signal    
-    pinMode(2,  INPUT_PULLUP);  // RFM69 IRQ Signal
-    break;
-  }   
-  
+  else if(board_version == WILDFIRE_V3){
+    uint8_t p[] = {6,7,14,15,16,21,23,11,13}; 
+    for(uint8_t i = 0; i < sizeof(p); i++){
+      pinMode(p[i], OUTPUT);        
+    }
+          
+    // Pin 7, 15, 21 and 16 should not be set LOW at the same time
+    // because they control common-output buffers
+    digitalWrite(21, HIGH);   // Slave Select for WiFi 
+    digitalWrite(16, HIGH);   // Slave Select for SD Card
+    digitalWrite(7,  HIGH);   // Slave Select for RFM69 
+    digitalWrite(15, HIGH);   // Slave Select for SPI Flash
+          
+    pinMode(22, INPUT);       // WiFi IRQ Signal
+    digitalWrite(22, HIGH);   // Pulled Up
+    
+    pinMode(2, INPUT);        // RFM69 IRQ Signal
+    digitalWrite(2, HIGH);    // Pulled Up
+          
+    pinMode(12, INPUT);       // MISO 
+    digitalWrite(12, HIGH);   // Pulled Up   
+  }
 }
