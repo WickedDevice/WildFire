@@ -29,7 +29,8 @@ void WildFire::begin(){
     digitalWrite(12, HIGH);   // Pulled Up
   }
   else if(board_version == WILDFIRE_V3){
-    uint8_t p[] = {6,7,14,15,16,21,23,11,13}; 
+    // pin 10 is SS, and *must* be an output for SPI to work correctly
+    uint8_t p[] = {6,7,14,15,16,21,23,10,11,13}; 
     for(uint8_t i = 0; i < sizeof(p); i++){
       pinMode(p[i], OUTPUT);        
     }
