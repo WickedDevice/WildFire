@@ -39,6 +39,7 @@ void WildFire::begin(){
     digitalWrite(16, HIGH);   // Slave Select for SD Card
     digitalWrite(7,  HIGH);   // Slave Select for RFM69 
     digitalWrite(15, HIGH);   // Slave Select for SPI Flash    
+    digitalWrite(14, HIGH);   // Tiny Watchdog interface starts high
     uint8_t p[] = {6,7,14,15,16,21,23,9,11,13}; 
     for(uint8_t i = 0; i < 7; i++){
       //Serial.print("Setting pin ");
