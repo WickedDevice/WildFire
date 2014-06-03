@@ -8,14 +8,10 @@
 #include <WProgram.h>
 #endif
 
-#define WILDFIRE_V2 (2)
-#define WILDFIRE_V3 (3)
-
 class WildFire {
   private:
-    uint8_t board_version;
   public:
-	WildFire(uint8_t board_version);
+	WildFire();
 	void begin(void);
 };
 

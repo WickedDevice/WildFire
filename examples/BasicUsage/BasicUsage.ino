@@ -1,6 +1,6 @@
 #include <WildFire.h>
 
-WildFire wildfire(WILDFIRE_V3);
+WildFire wildfire;
 
 void setup(){
   wildfire.begin();

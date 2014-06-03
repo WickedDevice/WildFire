@@ -1,9 +1,9 @@
 #include "WildFire.h"
 #include <inttypes.h>
-#include <Serial.h>
+#include <pins_arduino.h>
 
-WildFire::WildFire(uint8_t board_version){
-  this->board_version = board_version;
+WildFire::WildFire(){
+
 }
 
 void WildFire::begin(){
@@ -22,14 +22,13 @@ void WildFire::begin(){
   pinMode(12, INPUT);       // MISO 
   digitalWrite(12, HIGH);   // Pulled Up  
   
-  if(board_version == WILDFIRE_V2){
+  #if defined(WILDFIRE_VERSION) && (WILDFIRE_VERSION == 2)
     uint8_t p[] = {4,7,9,10,11,13}; 
     for(uint8_t i = 0; i < 6; i++){
       pinMode(p[i], OUTPUT);        
     }
-         
-  }
-  else if(board_version == WILDFIRE_V3){
+
+  #elif defined(WILDFIRE_VERSION) && (WILDFIRE_VERSION == 3) 
     // pin 9 is SS, and *must* be an output for SPI to work correctly
     
     // Pin 7, 15, 21 and 16 should not be set LOW at the same time
@@ -47,5 +46,6 @@ void WildFire::begin(){
       //Serial.println(" to Output");
       pinMode(p[i], OUTPUT);        
     }                   
-  }
+
+  #endif
 }
