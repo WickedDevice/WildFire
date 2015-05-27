@@ -1,0 +1,12 @@
+{
+  "name": "WildFireCore",
+  "keywords": "core",
+  "description": "WildFire Core",
+  "repository":
+  {
+     "type": "git",
+     "url": "https://github.com/WickedDevice/WildFire.git"
+  },
+  "frameworks": "arduino",
+  "platforms": "atmelavr"
+ }
